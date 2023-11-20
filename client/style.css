@@ -1,0 +1,8 @@
+.debug-info {
+  display: none;
+  position: absolute;
+  background-color: rgba(255, 0, 0, 0.5);
+  width: 200px;
+  height: 100px;
+  padding: 5px 10px;
+}
