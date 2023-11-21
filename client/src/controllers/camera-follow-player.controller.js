@@ -14,10 +14,5 @@ export default class CameraFollowPlayerController extends Controller {
 
   static update() {
     const player = this.#player;
-    SceneController.controls.target.set(
-      player.gameObject.position.x,
-      player.gameObject.position.y,
-      player.gameObject.position.z
-    );
   }
 }

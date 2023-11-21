@@ -4,6 +4,7 @@ import MouseController from "./src/controllers/mouse.controller";
 import ActionController from "./src/controllers/action.controller";
 import CameraFollowPlayerController from "./src/controllers/camera-follow-player.controller";
 import DebugInfoController from "./src/controllers/debug-info.controller";
+import CameraController from "./src/controllers/camera.controller";
 
 const controllers = [
   SceneController,
@@ -12,6 +13,7 @@ const controllers = [
   ActionController,
   CameraFollowPlayerController,
   DebugInfoController,
+  CameraController,
 ];
 
 async function main() {
