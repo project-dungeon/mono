@@ -32,4 +32,8 @@ export default class Player extends Entity {
     this.#cube.geometry.dispose();
     this.#cube.material.dispose();
   }
+
+  onMove() {
+    //
+  }
 }

@@ -19,7 +19,7 @@ export default class Entity {
     throw new Error("gameObject getter must be implemented");
   }
 
-  click(x, y) {}
+  click(x, y, z) {}
 
   update() {
     throw new Error("animate() method must be implemented");

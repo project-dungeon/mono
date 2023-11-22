@@ -13,6 +13,7 @@ export default class ObjectsController extends Controller {
   }
 
   static addObject(object) {
+    console.log("Adding object", object);
     ObjectsController.#objects[object.id] = object;
     ObjectsController.#gameObjects[object.gameObject.uuid] = object;
     SceneController.scene.add(object.gameObject);

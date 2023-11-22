@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import Entity, { EntityType } from "./entity";
-import ActionController from "../controllers/action.controller";
-import GameObjectsController from "../controllers/game-objects.controller";
-import MoveAction from "../actions/move.action";
+
+import getPlayer from "../utils/get-player";
+import ObjectMovementController from "../controllers/object-movement.controller";
 
 export default class Ground extends Entity {
   id = "ground";
@@ -25,9 +25,12 @@ export default class Ground extends Entity {
     return this.#plane;
   }
 
-  click(x, y) {
-    ActionController.dispatch(
-      new MoveAction(GameObjectsController.findById("player"), x, y)
+  click(x, _, z) {
+    const player = getPlayer();
+    ObjectMovementController.add(
+      player,
+      new THREE.Vector3(x, player.gameObject.position.y, z),
+      1000
     );
   }
 

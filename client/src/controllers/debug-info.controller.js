@@ -10,7 +10,7 @@ export default class DebugController extends Controller {
   static update() {
     const player = GameObjectsController.findById("player");
     DebugController.#debugInfo.innerHTML = `
-      <p>Player: (${player.gameObject.position.x}, ${player.gameObject.position.y})</p>
+      <p>Player: (${player.gameObject.position.x}, ${player.gameObject.position.z})</p>
     `;
   }
 }

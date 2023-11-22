@@ -37,7 +37,6 @@ export default class MouseController extends Controller {
     });
     window.addEventListener("click", () => {
       if (this.#intersection) {
-        console.log("CLICKED", this.#intersection.point);
         this.#intersection.object?.click(
           this.#intersection.point.x,
           this.#intersection.point.y,

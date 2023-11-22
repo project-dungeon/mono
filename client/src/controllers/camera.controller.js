@@ -6,7 +6,7 @@ import KeyboardController from "./keyboard.controller";
 export default class CameraController extends Controller {
   static #camera;
   static #target;
-  static #zoom = 10;
+  static #zoom = 100;
   static #theta = 0; // Angle around the sphere
   static #phi = 0.01; // Angle for moving up and down
   static #controlsEnabled = true;
