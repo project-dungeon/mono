@@ -13,7 +13,7 @@ export default class Ground extends Entity {
 
   constructor() {
     super();
-    const geometry = new THREE.PlaneGeometry(100, 100);
+    const geometry = new THREE.PlaneGeometry(150, 150);
     const material = new THREE.MeshBasicMaterial({ color: 0xcccccc });
     this.#plane = new THREE.Mesh(geometry, material);
     this.#plane.position.set(0, 0, 0);

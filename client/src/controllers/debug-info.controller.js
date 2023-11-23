@@ -14,7 +14,10 @@ export default class DebugController extends Controller {
       return;
     }
     DebugController.#debugInfo.innerHTML = `
-      <p>Player: (${player.gameObject.position.x}, ${player.gameObject.position.z})</p>
+      <p>Player id: ${player.id}</p>
+      <p>Player position: ${player.gameObject.position.x.toFixed(
+        1
+      )}, ${player.gameObject.position.z.toFixed(1)}</p>
     `;
   }
 }
