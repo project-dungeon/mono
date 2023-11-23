@@ -39,6 +39,10 @@ export default class Store {
     }
   }
 
+  filter(cb) {
+    return Object.entries(this.#data).filter(cb);
+  }
+
   subscribe(key, action, cb) {
     const id = crypto.randomUUID();
     this.#subscribers[key] ??= {};

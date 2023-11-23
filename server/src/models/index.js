@@ -1,3 +1,3 @@
-import WorldLocationModel from "./world-location.model.js";
+import ObjectModel from "./object.model.js";
 
-export const worldLocationModel = new WorldLocationModel();
+export const objectModel = new ObjectModel();

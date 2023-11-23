@@ -10,7 +10,6 @@ export default class SceneController extends Controller {
     1,
     10000
   );
-  static #controls;
   static {
     SceneController.scene.background = new THREE.Color(0xffffff);
     SceneController.#renderer.setSize(window.innerWidth, window.innerHeight);

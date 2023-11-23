@@ -14,7 +14,7 @@ export default class PacketClient {
     });
   }
 
-  send(packet) {
-    this.#ws.send(packet.encode());
+  async send(packet) {
+    return this.#ws.send(packet.encode());
   }
 }

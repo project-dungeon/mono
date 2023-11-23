@@ -1,6 +1,6 @@
 export const serverPacketType = {
   PLAYER_INITIAL_LOGIN_ID: "PLAYER_INITIAL_LOGIN_ID",
-  PLAYER_INITIAL_LOCATION: "PLAYER_INITIAL_LOCATION",
+  WORLD: "WORLD",
 };
 
 export default class ServerPacket {
