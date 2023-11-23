@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 export const objectIds = {
   Player: 1,
   Block: 2,
@@ -27,7 +25,7 @@ export default class Object {
       id: this.id,
       gameObjectId: this.gameObjectId,
       name: this.name,
-      position: this.position,
+      position: this.position.json(),
     };
   }
 }

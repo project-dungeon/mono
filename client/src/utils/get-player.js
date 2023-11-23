@@ -1,5 +1,5 @@
-import GameObjectsController from "../controllers/game-objects.controller";
+import PlayerController from "../controllers/player.controller";
 
 export default function getPlayer() {
-  return GameObjectsController.findById("player");
+  return PlayerController.player;
 }

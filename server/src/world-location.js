@@ -10,4 +10,11 @@ export default class WorldLocation {
   distance(other) {
     return Math.sqrt((other.x - this.x) ** 2 + (other.y - this.y) ** 2);
   }
+
+  json() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
 }

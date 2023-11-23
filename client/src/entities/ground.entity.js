@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import Entity, { EntityType } from "./entity";
-
 import getPlayer from "../utils/get-player";
 import ObjectMovementController from "../controllers/object-movement.controller";
 

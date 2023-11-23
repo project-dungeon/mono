@@ -4,10 +4,6 @@ import WorldLocation from "../world-location.js";
 
 export default class Area {
   constructor() {
-    const anotherPlayer = new PlayerObject(
-      "Another Player",
-      new WorldLocation(0, 2)
-    );
-    objectModel.set(anotherPlayer.gameObjectId, anotherPlayer);
+    // TODO
   }
 }

@@ -2,13 +2,13 @@ import Controller from "./controller";
 import SceneController from "./scene.controller";
 import Player from "../entities/player.entity";
 import Ground from "../entities/ground.entity";
+import { EntityType } from "../entities/entity";
 
 export default class ObjectsController extends Controller {
   static #objects = {};
   static #gameObjects = {};
 
   static {
-    this.addObject(new Player());
     this.addObject(new Ground());
   }
 
@@ -37,11 +37,17 @@ export default class ObjectsController extends Controller {
     }
   }
 
+  static findById(id) {
+    return this.#objects[id];
+  }
+
   static findByGameUuid(uuid) {
     return this.#gameObjects[uuid];
   }
 
-  static findById(id) {
-    return this.#objects[id];
+  static gameObjects() {
+    return Object.values(this.#gameObjects).filter(
+      (o) => o.type === EntityType.GameObject
+    );
   }
 }

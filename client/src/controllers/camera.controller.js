@@ -2,13 +2,14 @@ import Controller from "./controller";
 import SceneController from "./scene.controller";
 import GameObjectsController from "./game-objects.controller";
 import KeyboardController from "./keyboard.controller";
+import getPlayer from "../utils/get-player";
 
 export default class CameraController extends Controller {
   static #camera;
   static #target;
   static #zoom = 10;
   static #theta = 0; // Angle around the sphere
-  static #phi = 0.01; // Angle for moving up and down
+  static #phi = 1.3; // Angle for moving up and down
   static #controlsEnabled = true;
 
   static update() {
@@ -18,7 +19,10 @@ export default class CameraController extends Controller {
     }
 
     if (!this.#target) {
-      const playerObject = GameObjectsController.findById("player");
+      const playerObject = getPlayer();
+      if (!playerObject) {
+        return;
+      }
       this.#target = playerObject.gameObject.position;
     }
 
@@ -42,9 +46,9 @@ export default class CameraController extends Controller {
 
     // Update camera left/right rotation based on input
     if (KeyboardController.isPressed("ArrowLeft")) {
-      this.#theta -= 0.05;
-    } else if (KeyboardController.isPressed("ArrowRight")) {
       this.#theta += 0.05;
+    } else if (KeyboardController.isPressed("ArrowRight")) {
+      this.#theta -= 0.05;
     }
 
     // Update camera zoom based on input

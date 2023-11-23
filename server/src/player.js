@@ -68,7 +68,10 @@ export default class Player {
   }
 
   async #onLogin() {
-    this.#thisObject = new PlayerObject("Player", new WorldLocation(0, 0));
+    this.#thisObject = new PlayerObject(
+      "Player",
+      new WorldLocation(Math.random() * 10, Math.random() * 10)
+    );
     objectModel.set(this.id, this.#thisObject);
     this.#queuePacket(
       new ServerPacket(serverPacketType.PLAYER_INITIAL_LOGIN_ID, {

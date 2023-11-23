@@ -1,4 +1,4 @@
-import ServerPacket from "../packets/server-packet.js";
+import ServerPacket from "../packets/server-packet";
 
 export default class PacketClient {
   #ws;
@@ -8,10 +8,10 @@ export default class PacketClient {
   }
 
   onMessage(handler) {
-    this.#ws.on("message", (message) => {
+    this.#ws.onmessage = (message) => {
       const packet = new ServerPacket(message);
       handler(packet);
-    });
+    };
   }
 
   send(packet) {
