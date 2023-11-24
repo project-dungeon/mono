@@ -1,10 +1,12 @@
 import { objectModel } from "../models/index.js";
 import { Tickable } from "../global-tick.js";
 import { objectIds } from "../objects/object.js";
+import Move from "../disposable/move.js";
 
 export default class BlockAi extends Tickable {
   #object;
-  #speed = 0.5;
+  #speed = 0.1;
+  #attackRadius = 2;
 
   constructor(object) {
     super();
@@ -21,15 +23,17 @@ export default class BlockAi extends Tickable {
         break;
       }
     }
-    if (nearbyPlayer) {
-      const { x, y } = nearbyPlayer.position;
-      const { x: ox, y: oy } = this.#object.position;
-      const dx = x - ox;
-      const dy = y - oy;
-      const angle = Math.atan2(dy, dx);
-      this.#object.position.x += Math.cos(angle) * this.#speed;
-      this.#object.position.y += Math.sin(angle) * this.#speed;
-      objectModel.set(this.#object.gameObjectId, this.#object);
+    if (!nearbyPlayer) {
+      Move.stopMove(this.#object);
+      return;
     }
+    if (
+      this.#object.position.distance(nearbyPlayer.position) <=
+      this.#attackRadius
+    ) {
+      Move.stopMove(this.#object);
+      return;
+    }
+    new Move(this.#object, nearbyPlayer.position, this.#speed);
   }
 }

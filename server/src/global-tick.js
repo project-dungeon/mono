@@ -8,6 +8,7 @@ export default class GlobalTick {
   static addSubscriber(cb) {
     const id = crypto.randomUUID();
     this.#subscribers[id] = cb;
+    return id;
   }
 
   static removeSubscriber(id) {

@@ -5,6 +5,7 @@ import GlobalTick from "./global-tick.js";
 import { objectModel } from "./models/index.js";
 import PlayerObject from "./objects/player.object.js";
 import ServerPacket, { serverPacketType } from "./packets/server-packet.js";
+import Move from "./disposable/move.js";
 
 export default class Player {
   #ws;
@@ -27,8 +28,7 @@ export default class Player {
 
   #handleMove(payload) {
     const { x, y } = payload;
-    this.#player.position = new WorldLocation(x, y);
-    objectModel.set(this.id, this.#player);
+    new Move(this.#player, new WorldLocation(x, y), 0.5);
   }
 
   #handleClose() {
@@ -96,8 +96,6 @@ export default class Player {
     this.#packetClient = new PacketClient(ws);
     this.#packetClient.onMessage((packet) => {
       const handler = this.#handlers[packet.topic];
-      console.log("Message received:", packet);
-      console.log("Handler:", handler);
       if (handler) {
         handler(packet.payload);
       }
