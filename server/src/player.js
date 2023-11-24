@@ -10,18 +10,25 @@ export default class Player {
   #ws;
   #handlers = {
     [clientPacketType.LOGIN]: this.#onLogin.bind(this),
+    [clientPacketType.MOVE]: this.#handleMove.bind(this),
   };
   #packetClient;
   #thisTickPackets = [];
-  #thisObject;
+  #player;
   #nearbyObjectsIds = [];
 
   get id() {
-    return this.#thisObject.gameObjectId;
+    return this.#player.gameObjectId;
   }
 
   #queuePacket(packet) {
     this.#thisTickPackets.push(packet);
+  }
+
+  #handleMove(payload) {
+    const { x, y } = payload;
+    this.#player.position = new WorldLocation(x, y);
+    objectModel.set(this.id, this.#player);
   }
 
   #handleClose() {
@@ -32,7 +39,7 @@ export default class Player {
 
   #handleLocation() {
     const id = objectModel.subscribe(this.id, "set", (playerObject) => {
-      this.#thisObject = playerObject;
+      this.#player = playerObject;
     });
     this.#ws.addEventListener("close", () => {
       objectModel.unsubscribe(this.id, "set", id);
@@ -68,11 +75,11 @@ export default class Player {
   }
 
   async #onLogin() {
-    this.#thisObject = new PlayerObject(
+    this.#player = new PlayerObject(
       "Player",
       new WorldLocation(Math.random() * 10, Math.random() * 10)
     );
-    objectModel.set(this.id, this.#thisObject);
+    objectModel.set(this.id, this.#player);
     this.#queuePacket(
       new ServerPacket(serverPacketType.PLAYER_INITIAL_LOGIN_ID, {
         id: this.id,
@@ -89,6 +96,8 @@ export default class Player {
     this.#packetClient = new PacketClient(ws);
     this.#packetClient.onMessage((packet) => {
       const handler = this.#handlers[packet.topic];
+      console.log("Message received:", packet);
+      console.log("Handler:", handler);
       if (handler) {
         handler(packet.payload);
       }

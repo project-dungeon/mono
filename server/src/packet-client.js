@@ -9,6 +9,7 @@ export default class PacketClient {
 
   onMessage(handler) {
     this.#ws.on("message", (message) => {
+      console.log("Message received:", message.toString());
       const packet = new ClientPacket(message);
       handler(packet);
     });

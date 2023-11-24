@@ -1,6 +1,5 @@
 import getPlayer from "../utils/get-player";
 import Controller from "./controller";
-import GameObjectsController from "./game-objects.controller";
 
 export default class DebugController extends Controller {
   static #debugInfo;

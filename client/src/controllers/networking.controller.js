@@ -1,11 +1,11 @@
 import config from "../config";
 import ClientPacket, { clientPacketType } from "../packets/client-packet";
 import { serverPacketType } from "../packets/server-packet";
-import instantiateObject from "../utils/instantiate-object";
 import PacketClient from "../utils/packet-client";
 import Controller from "./controller";
 import PlayerController from "./player.controller";
 import GameObjectsController from "./game-objects.controller";
+import interpolateObject from "../utils/interpolate-object";
 
 export default class NetworkingController extends Controller {
   static #playerId;
@@ -14,6 +14,7 @@ export default class NetworkingController extends Controller {
       NetworkingController.#handlePlayerInitialLoginId,
     [serverPacketType.WORLD]: NetworkingController.#handleWorld,
   };
+  static #packetClient;
 
   static #handlePlayerInitialLoginId(packet) {
     NetworkingController.#playerId = packet.payload.id;
@@ -25,7 +26,7 @@ export default class NetworkingController extends Controller {
       if (object.gameObjectId === NetworkingController.#playerId) {
         PlayerController.playerId = object.gameObjectId;
       }
-      instantiateObject(object);
+      interpolateObject(object);
       used.add(object.gameObjectId);
     }
     for (const object of GameObjectsController.gameObjects()) {
@@ -38,20 +39,29 @@ export default class NetworkingController extends Controller {
   static {
     const ws = new WebSocket(config.WORLD_URL);
     ws.addEventListener("open", () => {
-      const packetClient = new PacketClient(ws);
-      packetClient.send(
+      this.#packetClient = new PacketClient(ws);
+      this.#packetClient.send(
         new ClientPacket({ topic: clientPacketType.LOGIN, payload: {} })
       );
       ws.addEventListener("close", () => {
         alert("Connection to server lost");
       });
-      packetClient.onMessage((message) => {
+      this.#packetClient.onMessage((message) => {
         const handler = NetworkingController.#handlers[message.topic];
         if (handler) {
           handler(message);
         }
       });
     });
+  }
+
+  static move(x, y) {
+    this.#packetClient.send(
+      new ClientPacket({
+        topic: clientPacketType.MOVE,
+        payload: { x, y },
+      })
+    );
   }
 
   static update() {}

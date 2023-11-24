@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Entity, { EntityType } from "./entity";
 import getPlayer from "../utils/get-player";
 import ObjectMovementController from "../controllers/object-movement.controller";
+import NetworkingController from "../controllers/networking.controller";
 
 export default class Ground extends Entity {
   id = "ground";
@@ -25,12 +26,7 @@ export default class Ground extends Entity {
   }
 
   click(x, _, z) {
-    const player = getPlayer();
-    ObjectMovementController.add(
-      player,
-      new THREE.Vector3(x, player.gameObject.position.y, z),
-      1000
-    );
+    NetworkingController.move(x, z);
   }
 
   update() {}

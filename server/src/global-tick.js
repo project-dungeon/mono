@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-const TICK_RATE_MS = 1000;
+const TICK_RATE_MS = 100;
 
 export default class GlobalTick {
   static #subscribers = {};
@@ -24,5 +24,21 @@ export default class GlobalTick {
       }
     }
     tick();
+  }
+}
+
+export class Tickable {
+  #id;
+
+  constructor() {
+    this.#id = GlobalTick.addSubscriber(this.update.bind(this));
+  }
+
+  update() {
+    throw new Error("update must be implemented");
+  }
+
+  destroy() {
+    GlobalTick.removeSubscriber(this.#id);
   }
 }
