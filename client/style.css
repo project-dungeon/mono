@@ -6,4 +6,10 @@
   height: 100px;
   padding: 5px 10px;
   font-size: 12px;
+  gap: 0;
+}
+
+.debug-info-p {
+  margin: 0;
+  padding: 0;
 }
