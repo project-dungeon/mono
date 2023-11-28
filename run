@@ -1,0 +1,11 @@
+#!/bin/bash
+
+function run_server(){
+  (cd server && npm run $1)
+}
+
+function run_client(){
+  (cd client && npm run $1)
+}
+
+run_server $1 & run_client $1;

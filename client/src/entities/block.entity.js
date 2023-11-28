@@ -9,6 +9,10 @@ export default class Block extends Entity {
     return EntityType.GameObject;
   }
 
+  get gameObject() {
+    return this.#cube;
+  }
+
   constructor(serverObject) {
     super();
     this.id = serverObject.gameObjectId;
@@ -22,8 +26,8 @@ export default class Block extends Entity {
     );
   }
 
-  get gameObject() {
-    return this.#cube;
+  serverTick(serverObject) {
+    // update position
   }
 
   update() {}

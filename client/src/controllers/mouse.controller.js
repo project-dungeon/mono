@@ -23,9 +23,16 @@ export default class MouseController extends Controller {
       return;
     }
     const [intersection] = intersects;
+    const object =
+      GameObjectsController.findByGameUuid(intersection.object.uuid) ??
+      GameObjectsController.findByGameUuid(intersection.object.parent.uuid);
+    if (!object) {
+      this.#intersection = null;
+      return;
+    }
     this.#intersection = {
       point: intersection.point,
-      object: GameObjectsController.findByGameUuid(intersection.object.uuid),
+      object,
     };
   }
 

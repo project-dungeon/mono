@@ -1,9 +1,15 @@
+import { attributeType } from "../attributes/attribute.js";
+import PositionAttribute from "../attributes/position.attribute.js";
+import RotationAttribute from "../attributes/rotation.attribute.js";
+
 export const objectIds = {
   Player: 1,
   Block: 2,
 };
 
 export default class Object {
+  attributes = [];
+
   get id() {
     throw new Error("id getter must be implemented");
   }
@@ -16,8 +22,31 @@ export default class Object {
     throw new Error("name getter must be implemented");
   }
 
+  setAttribute(attribute) {
+    const index = this.attributes.findIndex(
+      (existingAttribute) => existingAttribute.type === attribute.type
+    );
+    if (index === -1) {
+      this.attributes.push(attribute);
+    } else {
+      this.attributes[index] = attribute;
+    }
+  }
+
+  getAttribute(type) {
+    return this.attributes.find((attribute) => attribute.type === type);
+  }
+
   get position() {
-    throw new Error("position getter must be implemented");
+    const position = this.getAttribute(attributeType.Position).value;
+    if (!position) {
+      throw new Error("position attribute not found");
+    }
+    return position;
+  }
+
+  set position(value) {
+    this.setAttribute(new PositionAttribute(value));
   }
 
   json() {
@@ -25,7 +54,7 @@ export default class Object {
       id: this.id,
       gameObjectId: this.gameObjectId,
       name: this.name,
-      position: this.position.json(),
+      attributes: this.attributes.map((attribute) => attribute.json()),
     };
   }
 }

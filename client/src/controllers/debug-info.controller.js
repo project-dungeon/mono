@@ -17,6 +17,13 @@ export default class DebugController extends Controller {
       <p>Player position: ${player.gameObject.position.x.toFixed(
         1
       )}, ${player.gameObject.position.z.toFixed(1)}</p>
+      ${
+        player.serverPosition
+          ? `<p>Server position: ${player.serverPosition.x.toFixed(
+              1
+            )}, ${player.serverPosition.y.toFixed(1)}</p>`
+          : ""
+      }
     `;
   }
 }

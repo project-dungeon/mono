@@ -1,9 +1,7 @@
-import { Vector3 } from "three";
 import GameObjectsController from "../controllers/game-objects.controller";
-import ObjectMovementController from "../controllers/object-movement.controller";
 import Player from "../entities/player.entity";
-import { TICK_RATE_MS } from "../constants";
 import Block from "../entities/block.entity";
+import ServerObject from "./server-object";
 
 export const objectIds = {
   Player: 1,
@@ -11,27 +9,21 @@ export const objectIds = {
 };
 
 export default function interpolateObject(data) {
-  const object = GameObjectsController.findById(data.gameObjectId);
-  if (object) {
-    ObjectMovementController.add(
-      object,
-      new Vector3(
-        data.position.x,
-        object.gameObject.position.y,
-        data.position.y
-      ),
-      TICK_RATE_MS
-    );
+  const serverObject = new ServerObject(data);
+  const existingObject = GameObjectsController.findById(
+    serverObject.gameObjectId
+  );
+  if (existingObject) {
+    existingObject.serverTick(serverObject);
     return;
   }
   switch (data.id) {
     case objectIds.Player:
-      GameObjectsController.addObject(new Player(data));
+      GameObjectsController.addObject(new Player(serverObject));
       break;
     case objectIds.Block:
-      GameObjectsController.addObject(new Block(data));
+      GameObjectsController.addObject(new Block(serverObject));
       break;
-
     default:
       throw new Error(`Unknown object id ${data.id}`);
   }

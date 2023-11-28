@@ -1,3 +1,5 @@
+import ObjectMovementController from "../controllers/object-movement.controller";
+
 export const EntityType = {
   Dummy: 0,
   Terrain: 1,
@@ -7,16 +9,16 @@ export const EntityType = {
 export default class Entity {
   id = window.crypto.randomUUID();
 
-  get movementSpeed() {
-    return 0;
-  }
-
   get type() {
     throw new Error("type getter must be implemented");
   }
 
   get gameObject() {
     throw new Error("gameObject getter must be implemented");
+  }
+
+  serverTick(serverObject) {
+    throw new Error("tick() method must be implemented");
   }
 
   click(x, y, z) {}

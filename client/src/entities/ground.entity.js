@@ -12,6 +12,10 @@ export default class Ground extends Entity {
     return EntityType.Terrain;
   }
 
+  get gameObject() {
+    return this.#plane;
+  }
+
   constructor() {
     super();
     const geometry = new THREE.PlaneGeometry(150, 150);
@@ -21,8 +25,8 @@ export default class Ground extends Entity {
     this.#plane.rotation.x = -Math.PI / 2;
   }
 
-  get gameObject() {
-    return this.#plane;
+  serverTick(serverObject) {
+    // update position
   }
 
   click(x, _, z) {

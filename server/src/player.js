@@ -1,11 +1,12 @@
 import { clientPacketType } from "./packets/client-packet.js";
-import WorldLocation from "./world-location.js";
 import PacketClient from "./packet-client.js";
 import GlobalTick from "./global-tick.js";
-import { objectModel } from "./models/index.js";
 import PlayerObject from "./objects/player.object.js";
 import ServerPacket, { serverPacketType } from "./packets/server-packet.js";
 import Move from "./disposable/move.js";
+import Model from "./model.js";
+import Vector from "./math/vector.js";
+import RotationAttribute from "./attributes/rotation.attribute.js";
 
 export default class Player {
   #ws;
@@ -16,7 +17,7 @@ export default class Player {
   #packetClient;
   #thisTickPackets = [];
   #player;
-  #nearbyObjectsIds = [];
+  #nearbyObjects = [];
 
   get id() {
     return this.#player.gameObjectId;
@@ -28,32 +29,34 @@ export default class Player {
 
   #handleMove(payload) {
     const { x, y } = payload;
-    new Move(this.#player, new WorldLocation(x, y), 0.5);
+    new Move(this.#player, new Vector(x, y), 0.5);
+    this.#player.setAttribute(
+      new RotationAttribute(this.#player.position.angle(new Vector(x, y)))
+    );
+    Model.set(this.#player.gameObjectId, this.#player);
   }
 
   #handleClose() {
     this.#ws.addEventListener("close", () => {
-      objectModel.delete(this.id);
+      Model.delete(this.id);
     });
   }
 
   #handleLocation() {
-    const id = objectModel.subscribe(this.id, "set", (playerObject) => {
+    const id = Model.subscribe(this.id, "set", (playerObject) => {
       this.#player = playerObject;
     });
     this.#ws.addEventListener("close", () => {
-      objectModel.unsubscribe(this.id, "set", id);
+      Model.unsubscribe(this.id, "set", id);
     });
   }
 
   #handleNearbyObjects() {
     const id = GlobalTick.addSubscriber(() => {
-      this.#nearbyObjectsIds = objectModel.nearby(this.id, 100);
+      this.#nearbyObjects = Model.nearby(this.id, 100);
       this.#queuePacket(
         new ServerPacket(serverPacketType.WORLD, {
-          objects: this.#nearbyObjectsIds.map((noid) =>
-            objectModel.get(noid).json()
-          ),
+          objects: this.#nearbyObjects.map((object) => object.json()),
         })
       );
     });
@@ -77,9 +80,10 @@ export default class Player {
   async #onLogin() {
     this.#player = new PlayerObject(
       "Player",
-      new WorldLocation(Math.random() * 10, Math.random() * 10)
+      new Vector(Math.random() * 10, Math.random() * 10),
+      0
     );
-    objectModel.set(this.id, this.#player);
+    Model.set(this.id, this.#player);
     this.#queuePacket(
       new ServerPacket(serverPacketType.PLAYER_INITIAL_LOGIN_ID, {
         id: this.id,
