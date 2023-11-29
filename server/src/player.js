@@ -4,6 +4,7 @@ import GlobalTick from "./global-tick.js";
 import PlayerObject from "./objects/player.object.js";
 import ServerPacket, { serverPacketType } from "./packets/server-packet.js";
 import Move from "./disposable/move.js";
+import Chat from "./disposable/chat.js";
 import Model from "./model.js";
 import Vector from "./math/vector.js";
 import RotationAttribute from "./attributes/rotation.attribute.js";
@@ -13,6 +14,7 @@ export default class Player {
   #handlers = {
     [clientPacketType.LOGIN]: this.#onLogin.bind(this),
     [clientPacketType.MOVE]: this.#handleMove.bind(this),
+    [clientPacketType.CHAT]: this.#handleChat.bind(this),
   };
   #packetClient;
   #thisTickPackets = [];
@@ -25,6 +27,10 @@ export default class Player {
 
   #queuePacket(packet) {
     this.#thisTickPackets.push(packet);
+  }
+
+  #handleChat(payload) {
+    new Chat(this.#player, payload.message);
   }
 
   #handleMove(payload) {

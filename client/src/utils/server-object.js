@@ -12,6 +12,7 @@ export default class ServerObject {
       position: attributeType.Position,
       movement: attributeType.Movement,
       rotation: attributeType.Rotation,
+      chat: attributeType.Chat,
     };
     return new Proxy(this, {
       get: function (_, prop) {

@@ -1,6 +1,7 @@
 export const clientPacketType = {
   LOGIN: "LOGIN",
   MOVE: "MOVE",
+  CHAT: "CHAT",
 };
 
 export default class ClientPacket {

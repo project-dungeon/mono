@@ -2,6 +2,7 @@ export const attributeType = {
   Position: 1,
   Movement: 2,
   Rotation: 3,
+  Chat: 4,
 };
 
 export class Attribute {

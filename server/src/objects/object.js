@@ -37,6 +37,16 @@ export default class Object {
     return this.attributes.find((attribute) => attribute.type === type);
   }
 
+  removeAttribute(type) {
+    const index = this.attributes.findIndex(
+      (attribute) => attribute.type === type
+    );
+    if (index === -1) {
+      return;
+    }
+    this.attributes.splice(index, 1);
+  }
+
   get position() {
     const position = this.getAttribute(attributeType.Position).value;
     if (!position) {

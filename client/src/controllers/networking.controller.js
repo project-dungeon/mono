@@ -16,6 +16,18 @@ export default class NetworkingController extends Controller {
   };
   static #packetClient;
 
+  static #handleChat() {
+    window.addEventListener("__PDG__chat-sent", (e) => {
+      console.log(e);
+      this.#packetClient.send(
+        new ClientPacket({
+          topic: clientPacketType.CHAT,
+          payload: { message: e.detail.message },
+        })
+      );
+    });
+  }
+
   static #handlePlayerInitialLoginId(packet) {
     NetworkingController.#playerId = packet.payload.id;
   }
@@ -52,6 +64,7 @@ export default class NetworkingController extends Controller {
           handler(message);
         }
       });
+      this.#handleChat();
     });
   }
 

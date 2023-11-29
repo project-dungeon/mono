@@ -5,6 +5,7 @@ import DebugInfoController from "./src/controllers/debug-info.controller";
 import CameraController from "./src/controllers/camera.controller";
 import ObjectMovementController from "./src/controllers/object-movement.controller";
 import NetworkingController from "./src/controllers/networking.controller";
+import UiController from "./src/controllers/ui.controller";
 
 const controllers = [
   SceneController,
@@ -14,6 +15,7 @@ const controllers = [
   CameraController,
   ObjectMovementController,
   NetworkingController,
+  UiController,
 ];
 
 async function main() {
