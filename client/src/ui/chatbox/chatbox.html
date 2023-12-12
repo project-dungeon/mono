@@ -49,12 +49,17 @@
 </style>
 <div class="chatbox-main">
   <ul id="chatbox-content" class="chatbox-content"></ul>
-  <form id="chatbox-form" class="chatbox-form">
+  <form
+    id="chatbox-form"
+    class="chatbox-form"
+    autocomplete="off"
+    spellcheck="false"
+  >
     <input
       id="chatbox-input"
       type="text"
       placeholder="Press enter to start typing..."
     />
-    <button>Send</button>
+    <button type="button" id="chatbox-send-button">Send</button>
   </form>
 </div>

@@ -1,5 +1,6 @@
 const chatbox = document.getElementById("chatbox-content");
 const chatboxForm = document.getElementById("chatbox-form");
+const chatboxSendButton = document.getElementById("chatbox-send-button");
 
 function addMessage({ author, message }) {
   const li = document.createElement("li");
@@ -15,10 +16,11 @@ function addMessage({ author, message }) {
   messageSpan.innerHTML = message;
   li.appendChild(messageSpan);
   chatbox.appendChild(li);
+  // scroll to bottom
+  chatbox.scrollTop = chatbox.scrollHeight;
 }
 
-chatboxForm.addEventListener("submit", (e) => {
-  e.preventDefault();
+function onSubmit() {
   const message = document.getElementById("chatbox-input").value;
   if (!message) {
     return;
@@ -30,6 +32,15 @@ chatboxForm.addEventListener("submit", (e) => {
   );
   document.getElementById("chatbox-input").value = "";
   document.getElementById("chatbox-input").blur();
+}
+
+chatboxForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  onSubmit();
+});
+
+chatboxSendButton.addEventListener("click", () => {
+  onSubmit();
 });
 
 window.addEventListener("__PDG__chat-received", (e) => {

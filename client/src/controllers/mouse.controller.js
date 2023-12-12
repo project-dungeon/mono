@@ -9,6 +9,7 @@ export default class MouseController extends Controller {
   static #mouseChanged = false;
   static #mouse = new THREE.Vector2();
   static #intersection;
+  static #mouseOnUi = false;
 
   static #updateTarget() {
     if (!this.#mouseChanged) {
@@ -38,11 +39,19 @@ export default class MouseController extends Controller {
 
   static {
     window.addEventListener("mousemove", (event) => {
+      if (event.target.tagName !== "CANVAS") {
+        this.#mouseOnUi = true;
+        return;
+      }
+      this.#mouseOnUi = false;
       this.#mouseChanged = true;
       this.#mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.#mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     });
-    window.addEventListener("click", () => {
+    window.addEventListener("click", (e) => {
+      if (this.#mouseOnUi) {
+        return;
+      }
       if (this.#intersection) {
         this.#intersection.object?.click(
           this.#intersection.point.x,
@@ -54,6 +63,10 @@ export default class MouseController extends Controller {
   }
 
   static update() {
+    if (this.#mouseOnUi) {
+      document.body.style.cursor = "default";
+      return;
+    }
     this.#updateTarget();
     if (!this.#intersection) {
       document.body.style.cursor = "not-allowed";

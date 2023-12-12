@@ -1,6 +1,5 @@
 import Controller from "./controller";
 import SceneController from "./scene.controller";
-import Player from "../entities/player.entity";
 import Ground from "../entities/ground.entity";
 import { EntityType } from "../entities/entity";
 

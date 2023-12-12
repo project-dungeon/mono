@@ -18,7 +18,6 @@ export default class NetworkingController extends Controller {
 
   static #handleChat() {
     window.addEventListener("__PDG__chat-sent", (e) => {
-      console.log(e);
       this.#packetClient.send(
         new ClientPacket({
           topic: clientPacketType.CHAT,

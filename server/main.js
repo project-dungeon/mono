@@ -6,6 +6,10 @@ import "./src/world.js";
 
 const wss = new WebSocketServer({ port: 8080 });
 
+wss.on("listening", () => {
+  console.log("Listening on port 8080");
+});
+
 wss.on("connection", (ws) => {
   new Player(ws);
 });
