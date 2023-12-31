@@ -4,6 +4,7 @@ import { FontLoader } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import Entity, { EntityType } from "./entity";
 import SceneController from "../controllers/scene.controller";
+import chatFontJson from "../assets/fonts/chat-font.json";
 
 export default class Player extends Entity {
   id;
@@ -17,7 +18,6 @@ export default class Player extends Entity {
   #chat;
   #name;
   #chatObject;
-  #chatLoading = false;
 
   serverPosition;
 
@@ -39,8 +39,7 @@ export default class Player extends Entity {
     container.rotation.y = serverObject.rotation;
     const loader = new GLTFLoader();
     let model;
-
-    loader.load("https://threejs.org/examples/models/gltf/Xbot.glb", (gltf) => {
+    loader.load("src/assets/3dmodels/Xbot.glb", (gltf) => {
       model = gltf.scene;
       container.add(model);
       const skeleton = new THREE.SkeletonHelper(model);
@@ -87,42 +86,30 @@ export default class Player extends Entity {
           },
         })
       );
+      this.#chatObject?.parent.remove(this.#chatObject);
+      this.#chatObject = undefined;
     }
   }
 
   async #updateChat() {
-    if (this.#chatLoading) {
-      return;
-    }
     if (!this.#chat) {
       this.#chatObject?.parent.remove(this.#chatObject);
       this.#chatObject = undefined;
       return;
     }
     if (!this.#chatObject) {
-      const fontLoader = new FontLoader();
-      this.#chatLoading = true;
-      await new Promise((resolve) =>
-        fontLoader.load(
-          "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
-          (font) => {
-            const geometry = new TextGeometry(this.#chat.message, {
-              font,
-              size: 0.18,
-              height: 0.05,
-            });
-            const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "chat";
-            mesh.position.set(0, 2, 0);
-            this.#threeObject.add(mesh);
-            mesh.lookAt(SceneController.camera.position);
-            this.#chatObject = mesh;
-            resolve();
-          }
-        )
-      );
-      this.#chatLoading = false;
+      const geometry = new TextGeometry(this.#chat.message, {
+        font: new FontLoader().parse(chatFontJson),
+        size: 0.18,
+        height: 0.05,
+      });
+      const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.name = "chat";
+      mesh.position.set(0, 2, 0);
+      this.#threeObject.add(mesh);
+      mesh.lookAt(SceneController.camera.position);
+      this.#chatObject = mesh;
     }
     this.#chatObject.lookAt(SceneController.camera.position);
   }
@@ -151,8 +138,8 @@ export default class Player extends Entity {
     if (runningAction === this.#currentAnimation) {
       return;
     }
-    this.#actions[runningAction].stop();
     this.#actions[this.#currentAnimation].play();
+    this.#actions[runningAction].stop();
   }
 
   update() {

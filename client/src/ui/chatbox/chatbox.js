@@ -16,7 +16,6 @@ function addMessage({ author, message }) {
   messageSpan.innerHTML = message;
   li.appendChild(messageSpan);
   chatbox.appendChild(li);
-  // scroll to bottom
   chatbox.scrollTop = chatbox.scrollHeight;
 }
 

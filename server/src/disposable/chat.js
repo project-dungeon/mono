@@ -4,14 +4,11 @@ import ChatAttribute from "../attributes/chat.attribute.js";
 import Model from "../model.js";
 import { attributeType } from "../attributes/attribute.js";
 
-class Chats {
-  static chats = {};
-}
-
 const chatDurationMs = 5000;
 
 export default class Chat extends Tickable {
   id = crypto.randomUUID();
+  #chatAttributeId;
   #object;
   #startTime;
   #endTime;
@@ -21,29 +18,27 @@ export default class Chat extends Tickable {
     this.#object = object;
     this.#startTime = Date.now();
     this.#endTime = this.#startTime + chatDurationMs;
-    this.#object.setAttribute(new ChatAttribute(message));
-    Chats.chats[this.#object.gameObjectId] = this;
+    const chatAttribute = new ChatAttribute(message);
+    this.#object.setAttribute(chatAttribute);
+    this.#chatAttributeId = chatAttribute.id;
   }
 
   update() {
-    const existingChat = Chats.chats[this.#object.gameObjectId];
-    if (existingChat && existingChat.id !== this.id) {
-      existingChat.destroy();
+    const sender = Model.get(this.#object.gameObjectId);
+    const thisTickChatAttributeId = sender.getAttribute(attributeType.Chat)?.id;
+    if (this.#chatAttributeId !== thisTickChatAttributeId) {
+      return this.destroy(false);
     }
-    try {
-      if (Date.now() >= this.#endTime) {
-        return this.destroy();
-      }
-    } finally {
-      Model.set(this.#object.gameObjectId, this.#object);
-      Chats.chats[this.#object.gameObjectId] = this;
+    if (Date.now() >= this.#endTime) {
+      return this.destroy(true);
     }
   }
 
-  destroy() {
-    this.#object.removeAttribute(attributeType.Chat);
-    Model.set(this.#object.gameObjectId, this.#object);
-    delete Chats.chats[this.#object.gameObjectId];
+  destroy(removeAttribute = true) {
+    if (removeAttribute) {
+      this.#object.removeAttribute(attributeType.Chat);
+      Model.set(this.#object.gameObjectId, this.#object);
+    }
     super.destroy();
   }
 }
